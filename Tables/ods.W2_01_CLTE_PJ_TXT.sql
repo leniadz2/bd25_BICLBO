@@ -1,0 +1,12 @@
+﻿CREATE TABLE [ods].[W2_01_CLTE_PJ_TXT] (
+  [CODIGOPERSONA] [varchar](10) NULL,
+  [CODIGOTIPOPERSONA] [varchar](2) NULL,
+  [TIPODEDOCUMENTO] [varchar](4) NULL,
+  [NRODOCUMENTO] [varchar](15) NULL,
+  [RAZONSOCIAL] [varchar](50) NULL,
+  [FECHACREACIONS01] [varchar](8) NULL,
+  [HORACREACIONS01] [varchar](8) NULL,
+  [FECHAULTMODIFS01] [varchar](8) NULL
+)
+ON [PRIMARY]
+GO

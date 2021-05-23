@@ -1,0 +1,7 @@
+﻿CREATE TABLE [ods].[W1_06_EMANOCON_TXT] (
+  [CODIGOPERSONA] [varchar](10) NULL,
+  [EMAILS06] [varchar](100) NULL,
+  [FLAGCONTACTOS06] [varchar](1) NULL
+)
+ON [PRIMARY]
+GO

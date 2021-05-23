@@ -1,0 +1,7 @@
+﻿CREATE TABLE [ods].[W1_05_EMAIL_TXT] (
+  [CODIGOPERSONA] [varchar](10) NULL,
+  [EMAILS05] [varchar](100) NULL,
+  [FECHACREACIONS05] [varchar](8) NULL
+)
+ON [PRIMARY]
+GO

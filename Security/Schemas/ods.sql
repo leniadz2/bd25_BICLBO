@@ -1,0 +1,2 @@
+﻿CREATE SCHEMA [ods] AUTHORIZATION [sa]
+GO
