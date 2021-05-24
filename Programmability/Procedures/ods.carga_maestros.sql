@@ -2,6 +2,26 @@
 GO
 CREATE PROCEDURE [ods].[carga_maestros]
 AS
+  /***************************************************************************************************
+  Procedure:          ods.carga_maestros
+  Create Date:        202006DD
+  Author:             dÁlvarez
+  Description:        carga maestros de BONUS
+  Call by:            tbd
+  Affected table(s):  maestros
+  Used By:            BI
+  Parameter(s):       none
+  Log:                none
+  Prerequisites:      tbd
+  ****************************************************************************************************
+  SUMMARY OF CHANGES
+  Date(YYYYMMDD)      Author              Comments
+  ------------------- ------------------- ------------------------------------------------------------
+  202006DD            dÁlvarez            creación
+  20210523            dÁlvarez            cleansing coordenadas 
+  
+  ***************************************************************************************************/
+
 BEGIN
 
 DECLARE @date NVARCHAR(8),
@@ -70,7 +90,11 @@ SELECT CODIGOPERSONA      , CODIGOTIPOPERSONA, TIPODEDOCUMENTO, NRODOCUMENTO,
        FECHAULTMODIFS02 AS FECHAULTMODIF_PER
   FROM ods.W2_02_CLTE_PN_TXT;
 
-/*
+/* desarrollo control deltas tablas CONTACTO, DIRECCION, EMAIL, HIJO, PERSONA, TELEFONO, UNIF
+
+tablas: CONTACTO_E, DIRECCION_E, EMAIL_E, HIJO_E, PERSONA_E, TELEFONO_E, UNIF_E guarda el delta del bds y ods
+tablas: CONTACTO_I, DIRECCION_I, EMAIL_I, HIJO_I, PERSONA_I, TELEFONO_I, UNIF_I No a usar (borrar)
+
 INSERT INTO ods.PERSONA
 SELECT T.CODIGOPERSONA    ,
        T.NUMTARJETABONUS  ,
@@ -251,6 +275,52 @@ SELECT CODIGOPERSONA          ,
        @date as fecha,
        '20200825'
   FROM ods.W3_04_DIRECC_TXT;
+
+/*INI cleansing coordenadas
+
+--https://es.wikipedia.org/wiki/Anexo:Puntos_extremos_del_Per%C3%BA
+Punto extremo nor: 00°01′48″S 75°10′29″O.1​  En decimal	-0.03°, -75.174722°
+Punto extremo sur: 18°21′08″S 70°22′39″O.1​  En decimal	-18.352222°, -70.3775°
+Punto extremo est: 12°30′11″S 68°39′27″O1​   En decimal	-12.503056°, -68.6575°
+Punto extremo oes: 04°40′45″S 81°19′35″O    En decimal	-4.679167°, -81.326389°
+
+               -0.03°
+                  |
+                  |
+-81.326389° ------------- -68.6575°
+                  |
+                  |
+              -18.352222°
+*/
+
+UPDATE bds.DIRECCION
+  SET COORDENADAX = NULL, COORDENADAY = NULL
+WHERE COORDENADAX = COORDENADAY
+  AND COORDENADAY IS NOT NULL;
+
+UPDATE bds.DIRECCION
+SET COORDENADAX = COORDENADAY, COORDENADAY = COORDENADAX
+  WHERE CONVERT(FLOAT, COORDENADAX) < -18.352222 OR CONVERT(FLOAT, COORDENADAX) > -0.03
+    AND (    CONVERT(FLOAT, COORDENADAY) >= -18.352222 OR CONVERT(FLOAT, COORDENADAX) <= -0.03
+         AND CONVERT(FLOAT, COORDENADAY) >= -81.326389 OR CONVERT(FLOAT, COORDENADAY) <= -68.6575);
+
+UPDATE bds.DIRECCION
+SET COORDENADAX = COORDENADAY, COORDENADAY = COORDENADAX
+  WHERE CONVERT(FLOAT, COORDENADAY) < -81.326389 OR CONVERT(FLOAT, COORDENADAY) > -68.6575
+    AND (    CONVERT(FLOAT, COORDENADAY) >= -18.352222 OR CONVERT(FLOAT, COORDENADAX) <= -0.03
+         AND CONVERT(FLOAT, COORDENADAY) >= -81.326389 OR CONVERT(FLOAT, COORDENADAY) <= -68.6575);
+
+UPDATE bds.DIRECCION
+  SET COORDENADAX = NULL, COORDENADAY = NULL
+  WHERE CONVERT(FLOAT, COORDENADAX) < -18.352222 OR CONVERT(FLOAT, COORDENADAX) > -0.03;
+
+
+UPDATE bds.DIRECCION
+  SET COORDENADAX = NULL, COORDENADAY = NULL
+  WHERE CONVERT(FLOAT, COORDENADAY) < -81.326389 OR CONVERT(FLOAT, COORDENADAY) > -68.6575;
+
+--FIN cleansing coordenadas
+
 
 INSERT INTO bds.EMAIL
 SELECT CODIGOPERSONA    ,

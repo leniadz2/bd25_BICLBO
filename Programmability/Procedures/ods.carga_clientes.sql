@@ -2,6 +2,27 @@
 GO
 CREATE PROCEDURE [ods].[carga_clientes]
 AS
+  /***************************************************************************************************
+  Procedure:          ods.carga_clientes
+  Create Date:        202006DD
+  Author:             dÁlvarez
+  Description:        carga tabla de clientes de BONUS
+  Call by:            tbd
+  Affected table(s):  bds.CLIENTES
+                      bds.HIJOS
+  Used By:            BI
+  Parameter(s):       none
+  Log:                none
+  Prerequisites:      carga de los maestros
+  ****************************************************************************************************
+  SUMMARY OF CHANGES
+  Date(YYYYMMDD)      Author              Comments
+  ------------------- ------------------- ------------------------------------------------------------
+  202006DD            dÁlvarez            creación
+  20210523            dÁlvarez            tipo telefono 
+  
+  ***************************************************************************************************/
+
 BEGIN
 
 DECLARE @date NVARCHAR(8),
@@ -242,6 +263,7 @@ SELECT p.CODIGOPERSONA           ,
        t.TELEFONO,
        CASE
            WHEN t.TELEFONO like  '09%' THEN 'CELULAR'
+           WHEN t.TELEFONO = NULL THEN NULL
            ELSE 'NO CELULAR'
        END as  TELEFONO_D,
        t.FECHACREACION_TEL,
