@@ -263,7 +263,7 @@ SELECT p.CODIGOPERSONA           ,
        t.TELEFONO,
        CASE
            WHEN t.TELEFONO like  '09%' THEN 'CELULAR'
-           WHEN t.TELEFONO = NULL THEN NULL
+           WHEN t.TELEFONO IS NULL THEN NULL
            ELSE 'NO CELULAR'
        END as  TELEFONO_D,
        t.FECHACREACION_TEL,
