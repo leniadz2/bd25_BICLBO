@@ -1,4 +1,4 @@
-﻿CREATE TABLE [bds].[TABLON_bkp] (
+﻿CREATE TABLE [bds].[xTABLON_old] (
   [CODIGOPERSONA] [varchar](10) NOT NULL,
   [NUMTARJETABONUS] [varchar](19) NOT NULL,
   [TIPOTARJETA] [varchar](20) NULL,
@@ -97,5 +97,5 @@
 ON [PRIMARY]
 GO
 
-EXEC sys.sp_addextendedproperty N'MS_Description', N'cantidad de actualizaciones para un mismo cliente', 'SCHEMA', N'bds', 'TABLE', N'TABLON_bkp', 'COLUMN', N'CNT_C_A'
+EXEC sys.sp_addextendedproperty N'MS_Description', N'cantidad de actualizaciones para un mismo cliente', 'SCHEMA', N'bds', 'TABLE', N'xTABLON_old', 'COLUMN', N'CNT_C_A'
 GO
