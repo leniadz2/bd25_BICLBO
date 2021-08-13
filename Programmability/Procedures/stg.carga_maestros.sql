@@ -2,6 +2,25 @@
 GO
 CREATE PROCEDURE [stg].[carga_maestros]
 AS
+  /***************************************************************************************************
+  Procedure:          stg.carga_maestros
+  Create Date:        202006DD
+  Author:             dÁlvarez
+  Description:        carga tabla de maestrod de BONUS
+  Call by:            tbd
+  Affected table(s):  tbd
+  Used By:            BI
+  Parameter(s):       none
+  Log:                none
+  Prerequisites:      tbd
+  ****************************************************************************************************
+  SUMMARY OF CHANGES
+  Date(YYYYMMDD)      Author              Comments
+  ------------------- ------------------- ------------------------------------------------------------
+  202006DD            dÁlvarez            creación
+  20210812            dÁlvarez            correción, cambio de "orden <> 0" por "orden IS NULL"
+  
+  ***************************************************************************************************/
 BEGIN
 
 DECLARE @date NVARCHAR(8),
@@ -54,6 +73,9 @@ TRUNCATE TABLE ods.W3_06_EMANOCON_TXT;
 TRUNCATE TABLE ods.W3_07_HIJOS_TXT   ;
 TRUNCATE TABLE ods.W3_09_TELEF_TXT   ;
 TRUNCATE TABLE ods.W3_10_TLFNOCON_TXT;
+
+TRUNCATE TABLE ods.W4_05_EMAIL_TXT;
+TRUNCATE TABLE ods.W4_09_TELEF_TXT;
 
 --inserts maestros
 BULK INSERT stg.S01_CLTE_PJ_TXT  FROM 'e:\bi\biclbo\ftp\bandeja\CLTE_PJ.TXT' WITH (CODEPAGE = 'ACP', DATAFILETYPE = 'Char');
@@ -301,7 +323,7 @@ SELECT T05.CODIGOPERSONA   ,
        T05.FECHACREACIONS05,
        ROW_NUMBER() OVER (PARTITION BY T05.CODIGOPERSONA ORDER BY T05.FECHACREACIONS05 DESC, T05.EMAILS05 DESC)
   FROM ods.W3_05_EMAIL_TXT AS T05
- WHERE T05.orden <> 0;
+ WHERE T05.orden IS NULL;
 
 INSERT INTO ods.W4_05_EMAIL_TXT
 SELECT T05.CODIGOPERSONA   ,
@@ -326,7 +348,7 @@ SELECT CODIGOPERSONA     ,
        FECHACREACIONS09  ,
        ROW_NUMBER() OVER (PARTITION BY CODIGOPERSONA ORDER BY FECHACREACIONS09 DESC, TELEFONOS09 DESC)
   FROM ods.W3_09_TELEF_TXT
- WHERE orden <> 0;
+ WHERE orden IS NULL;
 
 INSERT INTO ods.W4_09_TELEF_TXT
 SELECT CODIGOPERSONA     ,
